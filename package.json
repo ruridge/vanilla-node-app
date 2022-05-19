@@ -1,8 +1,16 @@
 {
   "name": "vanilla-node-app",
   "version": "1.0.0",
+  "engines": {
+    "node": "16",
+    "npm": "8"
+  },
   "description": "",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ruridge/vanilla-node-app.git"
+  },
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
@@ -10,7 +18,7 @@
   },
   "keywords": [],
   "author": "Robert Uridge",
-  "license": "GPL-3.0",
+  "license": "AGPL-3.0-only",
   "devDependencies": {
     "nodemon": "^2.0.16"
   }
