@@ -1,35 +1,39 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const { URL } = require("url");
 
 const { getFileType } = require("./utils/getFileType");
 
+const users = require("./data/users");
+
 const server = http.createServer((req, res) => {
-  // console.log(req.url);
-  if (req.url.startsWith("/api")) {
-    const users = [
-      { name: "Bob", age: "20" },
-      { name: "John", age: "30" },
-      { name: "Alice", age: "40" },
-    ];
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(users));
+  const reqURL = new URL(req.url, `http://${req.headers.host}`);
+
+  if (reqURL.pathname.startsWith("/api")) {
+    if (reqURL.pathname === "/api/users" && req.method === "GET") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(users));
+    } else {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ message: "Not found" }));
+    }
   } else {
-    // get the requested path
-    const requestURL = new URL(req.url, `http://${req.headers.host}`);
-    const { pathname: requestPath, searchParams } = requestURL;
+    const requestExt = path.extname(reqURL.pathname);
 
-    const requestExt = path.extname(requestPath);
-
-    // build file path
+    // build file path and add index.html to end of path if file is directory
     let filePath = path.join(
       __dirname,
       "public",
-      requestPath,
-      requestExt ? "" : requestPath.endsWith("/") ? "index.html" : "/index.html"
+      reqURL.pathname,
+      requestExt
+        ? ""
+        : reqURL.pathname.endsWith("/")
+        ? "index.html"
+        : "/index.html"
     );
 
-    // Extension of file
+    // Extension of file (includes index.html, unlike requestExt)
     let extname = path.extname(filePath);
 
     // if the resquest is for a file
