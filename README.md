@@ -13,6 +13,7 @@ Going back to basics and building out a web application without using a server f
 
 ## ToDo
 
+- [ ] refactor with model & controller
 - [ ] implement basic api
 - [ ] inprove web routing
 - [ ] make the app more interesting...
